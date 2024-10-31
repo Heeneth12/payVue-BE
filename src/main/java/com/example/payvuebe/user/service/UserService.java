@@ -1,4 +1,5 @@
 package com.example.payvuebe.user.service;// Make sure to import your custom PasswordEncoder
+
 import com.example.payvuebe.user.dto.LoginResponseDTO;
 import com.example.payvuebe.user.entity.UserEntity;
 import com.example.payvuebe.user.repository.UserRepository;
@@ -32,7 +33,7 @@ public class UserService {
         if (user != null && passwordEncoder.matches(password, user.getPassword())) {
             String token = userJwt.createToken(Long.valueOf(user.getId()));
             loginResponseDTO.setToken(token);
-            loginResponseDTO.setUserRole(user.getUserRole());
+            loginResponseDTO.setUserRole(user.getRole());
             loginResponseDTO.setUserId(user.getId());
             loginResponseDTO.setUserName(user.getUserName());
             loginResponseDTO.setMessage("success");

@@ -2,6 +2,8 @@ package com.example.payvuebe.user.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.UuidGenerator;
 
 import java.util.Date;
 
@@ -23,8 +25,13 @@ public class UserEntity {
     private String email;
 
     @Column(nullable = false)
-    private String userRole;
+    private String role;
 
     @Column(nullable = false)
     private String password;
+
+    @Column(nullable = false)
+    private Date created_at;
+
+    private Date updated_at;
 }

@@ -1,9 +1,12 @@
 package com.example.payvuebe.user.controller;
 
+import com.example.payvuebe.invoice.entity.InvoiceEntity;
 import com.example.payvuebe.user.dto.LoginDTO;
 import com.example.payvuebe.user.dto.LoginResponseDTO;
 import com.example.payvuebe.user.entity.UserEntity;
 import com.example.payvuebe.user.service.UserService;
+import com.example.payvuebe.utils.ResponseResource;
+import com.example.payvuebe.utils.Status;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +16,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
-
 
 
 @RestController
@@ -27,22 +29,17 @@ public class UserController {
 
     // Registration endpoint
     @PostMapping(value = "register", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<UserEntity> register(@RequestBody UserEntity user) {
+    public ResponseResource<UserEntity> register(@RequestBody UserEntity user) {
         UserEntity registeredUser = userService.register(user);
-        return new ResponseEntity<>(registeredUser, HttpStatus.CREATED);
+        return new ResponseResource<>(ResponseResource.R_CODE_OK, ResponseResource.RES_SUCCESS, registeredUser,
+                Status.SUCCESS);
     }
 
     @PostMapping(value = "login", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<LoginResponseDTO> login(@RequestBody LoginDTO loginRequest) {
+    public ResponseResource<LoginResponseDTO> login(@RequestBody LoginDTO loginRequest) {
         LOGGER.info("Attempting login for user: {}", loginRequest.getNumber());
-
         LoginResponseDTO loginResponse = userService.login(loginRequest.getNumber(), loginRequest.getPassword());
-        if (loginResponse != null) {
-            return new ResponseEntity<>(loginResponse, HttpStatus.OK);
-        } else {
-            LoginResponseDTO failedLoginResponse = new LoginResponseDTO();
-            failedLoginResponse.setMessage("Invalid username or password");
-            return new ResponseEntity<>(failedLoginResponse, HttpStatus.UNAUTHORIZED);
-        }
+        return new ResponseResource<>(ResponseResource.R_CODE_OK, ResponseResource.RES_SUCCESS, loginResponse,
+                Status.SUCCESS);
     }
 }
