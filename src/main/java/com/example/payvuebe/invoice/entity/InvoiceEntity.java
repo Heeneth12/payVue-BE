@@ -40,11 +40,9 @@ public class InvoiceEntity {
     )
     private List<StockEntity> stocks;
 
-    // Total amount for the invoice
     @Column(nullable = false)
     private BigDecimal totalAmount;
 
-    // Short description or notes for the invoice
     private String description;
 
     // Timestamps for invoice creation and updates
@@ -55,6 +53,5 @@ public class InvoiceEntity {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
     private Date updatedAt;
 
-    // Optional: Status of the invoice (e.g., Paid, Pending, etc.)
     private String status;
 }

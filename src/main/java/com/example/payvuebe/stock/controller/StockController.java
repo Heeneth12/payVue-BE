@@ -1,5 +1,6 @@
 package com.example.payvuebe.stock.controller;
 
+import com.example.payvuebe.stock.dto.StockDTO;
 import com.example.payvuebe.stock.entity.StockEntity;
 import com.example.payvuebe.stock.service.StockService;
 import com.example.payvuebe.utils.ResponseResource;
@@ -29,10 +30,18 @@ public class StockController {
      * @return
      */
     @PostMapping(value = "/save", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseResource<StockEntity> addStock(@RequestBody StockEntity stock) {
+    public ResponseResource<StockEntity> addStock(@RequestBody StockDTO stock) {
         LOGGER.info("Request to save/update stock: {}", stock);
         StockEntity savedStock = stockService.addStock(stock);
         return new ResponseResource<>(ResponseResource.R_CODE_OK, ResponseResource.RES_SUCCESS, savedStock,
+                Status.SUCCESS);
+    }
+
+    @PostMapping(value = "/update" ,produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseResource<StockEntity> updateStock(@RequestBody StockDTO stockDTO) {
+        LOGGER.info("Request to update stock: {}", stockDTO);
+        StockEntity updatedStock = stockService.updateStock(stockDTO);
+        return new ResponseResource<>(ResponseResource.R_CODE_OK, ResponseResource.RES_SUCCESS, updatedStock,
                 Status.SUCCESS);
     }
 

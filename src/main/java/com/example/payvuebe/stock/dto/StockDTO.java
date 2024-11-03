@@ -22,7 +22,4 @@ public class StockDTO {
     private BigDecimal stock_quantity;
 
     private Integer stock_unit_size;
-
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
-    private Date updated_at;
 }

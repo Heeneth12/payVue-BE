@@ -1,5 +1,6 @@
 package com.example.payvuebe.stock.service;
 
+import com.example.payvuebe.stock.dto.StockDTO;
 import com.example.payvuebe.stock.entity.StockEntity;
 import com.example.payvuebe.stock.repository.StockRepository;
 import org.slf4j.Logger;
@@ -8,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,9 +23,30 @@ public class StockService {
 
     // Create or Update Stock
     @Transactional
-    public StockEntity addStock(StockEntity stock) {
-        LOGGER.info("Saving stock: {}", stock);
-        return stockRepository.save(stock);
+    public StockEntity addStock(StockDTO stockDTO) {
+        LOGGER.info("Saving stock: {}", stockDTO);
+        try {
+            LOGGER.info("Saving stock: {}", stockDTO);
+            StockEntity stockEntity = mapDtoToEntity(stockDTO);
+            return stockRepository.save(stockEntity);
+
+        } catch (Exception e) {
+            LOGGER.error("Error occurred while saving stock: {}", e.getMessage(), e);
+            throw new RuntimeException("Failed to save stock. Please try again later.");
+        }
+    }
+
+    private StockEntity mapDtoToEntity(StockDTO stockDTO) {
+        StockEntity stockEntity = new StockEntity();
+        stockEntity.setStock_uuid(stockDTO.getStock_uuid());
+        stockEntity.setStock_name(stockDTO.getStock_name());
+        stockEntity.setStock_type(stockDTO.getStock_type());
+        stockEntity.setStock_price(stockDTO.getStock_price());
+        stockEntity.setStock_unit(stockDTO.getStock_unit());
+        stockEntity.setStock_quantity(stockDTO.getStock_quantity());
+        stockEntity.setStock_unit_size(stockDTO.getStock_unit_size());
+        stockEntity.setUpdated_at(new Date());
+        return stockEntity;
     }
 
     // Get All Stocks
@@ -51,4 +74,30 @@ public class StockService {
         LOGGER.info("Deleting stock with id: {}", id);
         stockRepository.deleteById(id);
     }
+
+
+    public StockEntity updateStock(StockDTO stockDTO) {
+        LOGGER.info("Updating stock: {}", stockDTO);
+
+        try {
+            // Retrieve existing stock entity
+            StockEntity stockEntity = getStockById(stockDTO.getStock_uuid());
+            // Update fields with values from the DTO
+            stockEntity.setStock_name(stockDTO.getStock_name());
+            stockEntity.setStock_type(stockDTO.getStock_type());
+            stockEntity.setStock_price(stockDTO.getStock_price());
+            stockEntity.setStock_unit(stockDTO.getStock_unit());
+            stockEntity.setStock_quantity(stockDTO.getStock_quantity());
+            stockEntity.setStock_unit_size(stockDTO.getStock_unit_size());
+            stockEntity.setUpdated_at(new Date());
+
+            // Save updated entity and return
+            return stockRepository.save(stockEntity);
+
+        } catch (Exception e) {
+            LOGGER.error("Error updating stock with UUID {}: {}", stockDTO.getStock_uuid(), e.getMessage(), e);
+            throw new RuntimeException("Failed to update stock. Please try again later.");
+        }
+    }
+
 }

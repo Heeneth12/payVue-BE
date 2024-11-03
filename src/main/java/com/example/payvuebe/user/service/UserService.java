@@ -1,6 +1,7 @@
 package com.example.payvuebe.user.service;// Make sure to import your custom PasswordEncoder
 
 import com.example.payvuebe.user.dto.LoginResponseDTO;
+import com.example.payvuebe.user.dto.UserDto;
 import com.example.payvuebe.user.entity.UserEntity;
 import com.example.payvuebe.user.repository.UserRepository;
 import com.example.payvuebe.utils.PasswordEncoder;
@@ -42,5 +43,13 @@ public class UserService {
         return null; // Authentication failed
     }
 
+    public UserDto getUserByNumber(String number ){
+        UserEntity user = userRepository.findByNumber(number);
+        UserDto userDto = new UserDto();
+        userDto.setUserName(user.getUserName());
+        userDto.setEmail(user.getEmail());
+        userDto.setNumber(user.getNumber());
+        return userDto;
+    }
 
 }
